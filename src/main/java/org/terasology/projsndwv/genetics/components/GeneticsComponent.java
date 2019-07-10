@@ -17,9 +17,10 @@ package org.terasology.projsndwv.genetics.components;
 
 import org.terasology.entitySystem.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeneticsComponent implements Component {
-    public List<Integer> activeGenes;
-    public List<Integer> inactiveGenes;
+    public List<Integer> activeGenes = new ArrayList<>();
+    public List<Integer> inactiveGenes = new ArrayList<>();
 }
