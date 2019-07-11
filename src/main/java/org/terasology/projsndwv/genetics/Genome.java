@@ -16,19 +16,25 @@
 package org.terasology.projsndwv.genetics;
 
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.utilities.random.MersenneRandom;
 
 import java.util.Iterator;
-import java.util.Random;
 
 public class Genome {
-    private Random random = new Random(); // TODO: Use world random.
+    private MersenneRandom random;
+    private final int size;
 
-    public Iterator<GeneticsComponent> recombine(GeneticsComponent g0, GeneticsComponent g1) {
-        if (g0.activeGenes.size() != g0.inactiveGenes.size() || g1.activeGenes.size() != g1.inactiveGenes.size()) {
-            throw new RuntimeException("Malformed Genomes"); // TODO: Error handle properly
+    public Genome(int size, long seed) {
+        this.size = size;
+        random = new MersenneRandom(seed);
+    }
+
+    public Iterator<GeneticsComponent> combine(GeneticsComponent g0, GeneticsComponent g1) {
+        if (!g0.isValid() || !g1.isValid()) {
+            return null; // TODO: Error handle properly
         }
-        else if (g0.activeGenes.size() != g1.activeGenes.size()) {
-            throw new RuntimeException("Mismatched Genomes");
+        else if (g0.size != size || g1.size != size) {
+            return null;
         }
 
         return new Iterator<GeneticsComponent>() {
@@ -39,9 +45,9 @@ public class Genome {
 
             @Override
             public GeneticsComponent next() {
-                GeneticsComponent result = new GeneticsComponent();
+                GeneticsComponent result = new GeneticsComponent(size);
 
-                for (int i = 0; i < g0.activeGenes.size(); i++) {
+                for (int i = 0; i < size; i++) {
                     result.activeGenes.add(random.nextBoolean() ? g0.activeGenes.get(i) : g0.inactiveGenes.get(i));
                     result.inactiveGenes.add(random.nextBoolean() ? g1.activeGenes.get(i) : g1.inactiveGenes.get(i));
                 }

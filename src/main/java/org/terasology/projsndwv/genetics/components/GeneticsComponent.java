@@ -20,7 +20,24 @@ import org.terasology.entitySystem.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GeneticsComponent implements Component {
-    public List<Integer> activeGenes = new ArrayList<>();
-    public List<Integer> inactiveGenes = new ArrayList<>();
+public final class GeneticsComponent implements Component {
+    public int size;
+
+    public List<Integer> activeGenes;
+    public List<Integer> inactiveGenes;
+
+    public GeneticsComponent() {
+        activeGenes = new ArrayList<>();
+        inactiveGenes = new ArrayList<>();
+    }
+
+    public GeneticsComponent(int size) {
+        this.size = size;
+        activeGenes = new ArrayList<>(size);
+        inactiveGenes = new ArrayList<>(size);
+    }
+
+    public boolean isValid() {
+        return activeGenes.size() == inactiveGenes.size() && activeGenes.size() == size;
+    }
 }
