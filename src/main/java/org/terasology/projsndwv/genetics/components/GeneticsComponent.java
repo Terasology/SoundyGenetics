@@ -20,23 +20,47 @@ import org.terasology.entitySystem.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/***
+ * Stores a genome where one allele at a locus is expressed and the other is repressed.
+ */
 public final class GeneticsComponent implements Component {
+    /**
+     * Number of loci in this genome.
+     */
     public int size;
 
+    /**
+     * List of expressed alleles.
+     */
     public List<Integer> activeGenes;
+    /**
+     * List of repressed alleles.
+     */
     public List<Integer> inactiveGenes;
 
+    /**
+     * Constructs a {@code GeneticsComponent} with no size. Intended only for loading.
+     */
     public GeneticsComponent() {
         activeGenes = new ArrayList<>();
         inactiveGenes = new ArrayList<>();
     }
 
+    /**
+     * Constructs a {@code GeneticsComponent} of a given size.
+     * @param size Number of loci in the genome for this component
+     */
     public GeneticsComponent(int size) {
         this.size = size;
         activeGenes = new ArrayList<>(size);
         inactiveGenes = new ArrayList<>(size);
     }
 
+    /**
+     * Determines if this component is valid.
+     * @return True if and only if there is the same number of active and inactive alleles, and the number of each
+     * matches the number of loci.
+     */
     public boolean isValid() {
         return activeGenes.size() == inactiveGenes.size() && activeGenes.size() == size;
     }

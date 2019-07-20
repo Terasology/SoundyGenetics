@@ -18,14 +18,27 @@ package org.terasology.projsndwv.genetics;
 import org.terasology.projsndwv.genetics.components.GeneticsComponent;
 import org.terasology.utilities.random.MersenneRandom;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Handles genetic combination, including mutations.
+ */
 public class Genome {
     private MersenneRandom random;
     private final int size;
 
     private List<Map<AllelePair, List<Mutation>>> mutations;
 
+    /**
+     * Constructs a {@code Genome} with a seed and given number of loci.
+     * @param size Number of loci in this genome.
+     * @param seed Seed for the combination RNG.
+     */
     public Genome(int size, long seed) {
         this.size = size;
         random = new MersenneRandom(seed);
@@ -37,6 +50,13 @@ public class Genome {
         }
     }
 
+    /**
+     * Combines two genomes, evaluating mutations.
+     * @param g0 First genome to combine.
+     * @param g1 Second genome to combine.
+     * @return An iterator returning genomes that are random, mutated combinations of the input genomes, or null if
+     * the input genomes are of different sizes or are invalid.
+     */
     public Iterator<GeneticsComponent> combine(GeneticsComponent g0, GeneticsComponent g1) {
         if (!g0.isValid() || !g1.isValid()) {
             return null;
@@ -65,26 +85,8 @@ public class Genome {
             public GeneticsComponent next() {
                 GeneticsComponent result = new GeneticsComponent(size);
 
-                GeneticsComponent g0mutated = g0;
-                GeneticsComponent g1mutated = g1;
-
-                Collections.shuffle(possibleMutations);
-
-                for (Mutation mutation : possibleMutations) {
-                    if (random.nextFloat() < mutation.chance) {
-                        g0mutated = mutation.component;
-                        break;
-                    }
-                }
-
-                Collections.shuffle(possibleMutations);
-
-                for (Mutation mutation : possibleMutations) {
-                    if (random.nextFloat() < mutation.chance) {
-                        g1mutated = mutation.component;
-                        break;
-                    }
-                }
+                GeneticsComponent g0mutated = mutate(g0, possibleMutations);
+                GeneticsComponent g1mutated = mutate(g1, possibleMutations);
 
                 for (int i = 0; i < size; i++) {
                     result.activeGenes.add(random.nextBoolean() ? g0mutated.activeGenes.get(i) : g0mutated.inactiveGenes.get(i));
@@ -96,7 +98,30 @@ public class Genome {
         };
     }
 
+    private GeneticsComponent mutate(GeneticsComponent component, List<Mutation> mutations) {
+        List<Mutation> mutationsCopy = new ArrayList<>(mutations);
+        Collections.shuffle(mutationsCopy);
+
+        for (Mutation mutation : mutationsCopy) {
+            if (random.nextFloat() < mutation.chance) {
+                return mutation.component;
+            }
+        }
+
+        return component;
+    }
+
     // TODO: GeneticsComponents should probably consist of two separated genomes. This will allow for non-binary genetics and less data in these overrides later on.
+
+    /**
+     * Registers an override mutation to be factored into combinations performed with this {@code Genome}. An override mutation
+     * mutates the entire genome of a parent if a given pair of alleles is expressed by the parents at a given locus.
+     * @param locus Locus this mutation is triggered by.
+     * @param allele0 First allele that must be present at the given locus.
+     * @param allele1 Second allele that must be present at the given locus.
+     * @param override Genome resulting from this mutation.
+     * @param chance Probability of this mutation occurring if the trigger is met.
+     */
     public void registerMutation(int locus, int allele0, int allele1, GeneticsComponent override, float chance) {
         AllelePair ap = new AllelePair(allele0, allele1);
         Map<AllelePair, List<Mutation>> mutationsForLocus = mutations.get(locus);
