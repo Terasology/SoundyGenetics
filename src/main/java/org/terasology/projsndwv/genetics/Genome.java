@@ -114,8 +114,26 @@ public class Genome {
     // TODO: GeneticsComponents should probably consist of two separated genomes. This will allow for non-binary genetics and less data in these overrides later on.
 
     /**
-     * Registers an override mutation to be factored into combinations performed with this {@code Genome}. An override mutation
-     * mutates the entire genome of a parent if a given pair of alleles is expressed by the parents at a given locus.
+     * Registers an override mutation to be factored into combinations performed with this {@code Genome}. An override
+     * mutation mutates the entire genome of a parent if a given pair of alleles is expressed by the parents at a given
+     * locus.
+     *
+     * For example, consider a mutation registered at locus 1 with alleles '1' and '2', and override genetics '3 3 3'.
+     *
+     * The following parents could trigger it, as they have a 1-2 pair at locus 1:<br/>
+     * <br/>
+     * Parent 1: 1 2 1<br/>
+     * Parent 2: 1 1 1<br/>
+     * <br/>
+     * The following parents could not, as they only have the specified pair at locus 2:<br/>
+     * <br/>
+     * Parent 1: 1 1 1<br/>
+     * Parent 2: 1 1 2<br/>
+     * <br/>
+     *
+     * Suppose the mutation triggered in the first case, the chance was evaluated and a mutation occurred for parent 2. As
+     * this is an override mutation, parent 2 will now contribute to combination as if it had the genetics '3 3 3', and
+     * offspring for that combination will be as if the parents were '1 1 1' and '3 3 3'.
      * @param locus Locus this mutation is triggered by.
      * @param allele0 First allele that must be present at the given locus.
      * @param allele1 Second allele that must be present at the given locus.
