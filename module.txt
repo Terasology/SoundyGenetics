@@ -4,6 +4,8 @@
     "author" : "Soundwave",
     "displayName" : "SoundyGenetics",
     "description" : "",
-    "dependencies" : [],
+    "dependencies" : [
+        {"id" : "Inventory", "minVersion" : "1.0.0"}
+    ],
     "serverSideOnly" : false
 }
