@@ -16,6 +16,7 @@
 package org.terasology.projsndwv.genetics.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.logic.inventory.ItemDifferentiating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.List;
  * is the the allele that encodes the information that traits are based on for that locus (known as the genotype). The
  * inactive allele is ignored for the purpose of determining genotype, however, it participates in genetic combination.
  */
-public final class GeneticsComponent implements Component {
+public final class GeneticsComponent implements Component, ItemDifferentiating { // TODO: Make dependence on Inventory conditional
     /**
      * Number of loci in this genome.
      */
@@ -49,6 +50,7 @@ public final class GeneticsComponent implements Component {
      * Constructs a {@code GeneticsComponent} with no size. Intended only for deserialization. (All components must have
      * a default constructor to deserialize correctly.)
      */
+    @SuppressWarnings("unused")
     public GeneticsComponent() {
         activeGenes = new ArrayList<>();
         inactiveGenes = new ArrayList<>();
@@ -71,5 +73,29 @@ public final class GeneticsComponent implements Component {
      */
     public boolean isValid() {
         return activeGenes.size() == inactiveGenes.size() && activeGenes.size() == size;
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof GeneticsComponent)) {
+            return false;
+        }
+        GeneticsComponent geneticsComponent = (GeneticsComponent)o;
+        if (size != geneticsComponent.size || activeGenes.size() != geneticsComponent.activeGenes.size() || inactiveGenes.size() != geneticsComponent.inactiveGenes.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < activeGenes.size(); i++) {
+            if (!activeGenes.get(i).equals(geneticsComponent.activeGenes.get(i))) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < inactiveGenes.size(); i++) {
+            if (!inactiveGenes.get(i).equals(geneticsComponent.inactiveGenes.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
