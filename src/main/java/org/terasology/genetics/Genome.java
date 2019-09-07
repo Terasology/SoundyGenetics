@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.projsndwv.genetics;
+package org.terasology.genetics;
 
-import org.terasology.projsndwv.genetics.components.GeneticsComponent;
+import org.terasology.genetics.components.GeneticsComponent;
 import org.terasology.utilities.random.MersenneRandom;
 
 import java.util.ArrayList;
