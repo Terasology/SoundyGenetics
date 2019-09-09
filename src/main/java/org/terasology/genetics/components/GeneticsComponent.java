@@ -20,6 +20,7 @@ import org.terasology.logic.inventory.ItemDifferentiating;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /***
  * Stores a genome where one allele at a locus is expressed and the other is repressed.
@@ -79,7 +80,7 @@ public final class GeneticsComponent implements Component, ItemDifferentiating {
         if (!(o instanceof GeneticsComponent)) {
             return false;
         }
-        GeneticsComponent geneticsComponent = (GeneticsComponent)o;
+        GeneticsComponent geneticsComponent = (GeneticsComponent) o;
         if (size != geneticsComponent.size || activeGenes.size() != geneticsComponent.activeGenes.size() || inactiveGenes.size() != geneticsComponent.inactiveGenes.size()) {
             return false;
         }
@@ -97,5 +98,9 @@ public final class GeneticsComponent implements Component, ItemDifferentiating {
         }
 
         return true;
+    }
+
+    public int hashCode() {
+        return Objects.hash(size, activeGenes, inactiveGenes);
     }
 }

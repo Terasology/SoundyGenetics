@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Handles genetic combination, including mutations.
@@ -60,8 +61,7 @@ public class Genome {
     public Iterator<GeneticsComponent> combine(GeneticsComponent g0, GeneticsComponent g1) {
         if (!g0.isValid() || !g1.isValid()) {
             return null;
-        }
-        else if (g0.size != size || g1.size != size) {
+        } else if (g0.size != size || g1.size != size) {
             return null;
         }
 
@@ -98,8 +98,8 @@ public class Genome {
         };
     }
 
-    private GeneticsComponent mutate(GeneticsComponent component, List<Mutation> mutations) {
-        List<Mutation> mutationsCopy = new ArrayList<>(mutations);
+    private GeneticsComponent mutate(GeneticsComponent component, List<Mutation> mutationCandidates) {
+        List<Mutation> mutationsCopy = new ArrayList<>(mutationCandidates);
         Collections.shuffle(mutationsCopy);
 
         for (Mutation mutation : mutationsCopy) {
@@ -146,8 +146,7 @@ public class Genome {
         List<Mutation> mutationList = mutationsForLocus.get(ap);
         if (mutationList != null) {
             mutationList.add(new Mutation(chance, override));
-        }
-        else {
+        } else {
             mutationsForLocus.put(ap, new ArrayList<>(Collections.singletonList(new Mutation(chance, override))));
         }
     }
@@ -160,8 +159,7 @@ public class Genome {
             if (a0 <= a1) {
                 allele0 = a0;
                 allele1 = a1;
-            }
-            else {
+            } else {
                 allele0 = a1;
                 allele1 = a0;
             }
@@ -172,13 +170,13 @@ public class Genome {
             if (!(o instanceof  AllelePair)) {
                 return false;
             }
-            AllelePair ap = (AllelePair)o;
+            AllelePair ap = (AllelePair) o;
             return allele0 == ap.allele0 && allele1 == ap.allele1;
         }
 
         @Override
         public int hashCode() {
-            return 31 * allele0 + allele1;
+            return Objects.hash(allele0, allele1);
         }
     }
 
