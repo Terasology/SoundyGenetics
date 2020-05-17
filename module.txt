@@ -1,11 +1,12 @@
 {
-    "id" : "SoundyGenetics",
-    "version" : "0.1.0-SNAPSHOT",
-    "author" : "Soundwave",
-    "displayName" : "SoundyGenetics",
-    "description" : "",
-    "dependencies" : [
-        {"id" : "Inventory", "minVersion" : "1.0.0"}
+    "id": "SoundyGenetics",
+    "version": "1.0.0",
+    "author": "Soundwave",
+    "displayName": "Soundy Genetics",
+    "description": "This library module adds genetics.",
+    "dependencies": [
+        { "id": "Inventory", "minVersion": "1.1.0" }
     ],
-    "serverSideOnly" : false
+    "serverSideOnly": false,
+    "isLibrary": true
 }
