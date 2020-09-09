@@ -1,22 +1,9 @@
-/*
- * Copyright 2019 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.genetics;
 
+import org.terasology.engine.utilities.random.MersenneRandom;
 import org.terasology.genetics.components.GeneticsComponent;
-import org.terasology.utilities.random.MersenneRandom;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,13 +17,14 @@ import java.util.Objects;
  * Handles genetic combination, including mutations.
  */
 public class Genome {
-    private MersenneRandom random;
+    private final MersenneRandom random;
     private final int size;
 
-    private List<Map<AllelePair, List<Mutation>>> mutations;
+    private final List<Map<AllelePair, List<Mutation>>> mutations;
 
     /**
      * Constructs a {@code Genome} with a seed and given number of loci.
+     *
      * @param size Number of loci in this genome.
      * @param seed Seed for the combination RNG.
      */
@@ -53,10 +41,11 @@ public class Genome {
 
     /**
      * Combines two genomes, evaluating mutations.
+     *
      * @param g0 First genome to combine.
      * @param g1 Second genome to combine.
-     * @return An iterator returning genomes that are random, mutated combinations of the input genomes, or null if
-     * the input genomes are of different sizes or are invalid.
+     * @return An iterator returning genomes that are random, mutated combinations of the input genomes, or null if the
+     *         input genomes are of different sizes or are invalid.
      */
     public Iterator<GeneticsComponent> combine(GeneticsComponent g0, GeneticsComponent g1) {
         if (!g0.isValid() || !g1.isValid()) {
@@ -69,7 +58,8 @@ public class Genome {
 
         for (int i = 0; i < size; i++) {
             Map<AllelePair, List<Mutation>> mutationsForLocus = mutations.get(i);
-            AllelePair ap = new AllelePair(g0.activeGenes.get(i), g1.activeGenes.get(i)); // TODO: Remove dependence on active genes
+            AllelePair ap = new AllelePair(g0.activeGenes.get(i), g1.activeGenes.get(i)); // TODO: Remove dependence 
+            // on active genes
             if (mutationsForLocus.containsKey(ap)) {
                 possibleMutations.addAll(mutationsForLocus.get(ap));
             }
@@ -89,8 +79,10 @@ public class Genome {
                 GeneticsComponent g1mutated = mutate(g1, possibleMutations);
 
                 for (int i = 0; i < size; i++) {
-                    result.activeGenes.add(random.nextBoolean() ? g0mutated.activeGenes.get(i) : g0mutated.inactiveGenes.get(i));
-                    result.inactiveGenes.add(random.nextBoolean() ? g1mutated.activeGenes.get(i) : g1mutated.inactiveGenes.get(i));
+                    result.activeGenes.add(random.nextBoolean() ? g0mutated.activeGenes.get(i) :
+                            g0mutated.inactiveGenes.get(i));
+                    result.inactiveGenes.add(random.nextBoolean() ? g1mutated.activeGenes.get(i) :
+                            g1mutated.inactiveGenes.get(i));
                 }
 
                 return result;
@@ -111,29 +103,24 @@ public class Genome {
         return component;
     }
 
-    // TODO: GeneticsComponents should probably consist of two separated genomes. This will allow for non-binary genetics and less data in these overrides later on.
+    // TODO: GeneticsComponents should probably consist of two separated genomes. This will allow for non-binary 
+    //  genetics and less data in these overrides later on.
 
     /**
      * Registers an override mutation to be factored into combinations performed with this {@code Genome}. An override
      * mutation mutates the entire genome of a parent if a given pair of alleles is expressed by the parents at a given
      * locus.
-     *
+     * <p>
      * For example, consider a mutation registered at locus 1 with alleles '1' and '2', and override genetics '3 3 3'.
+     * <p>
+     * The following parents could trigger it, as they have a 1-2 pair at locus 1:<br/> <br/> Parent 1: 1 2 1<br/>
+     * Parent 2: 1 1 1<br/> <br/> The following parents could not, as they only have the specified pair at locus 2:<br/>
+     * <br/> Parent 1: 1 1 1<br/> Parent 2: 1 1 2<br/> <br/>
+     * <p>
+     * Suppose the mutation triggered in the first case, the chance was evaluated and a mutation occurred for parent 2.
+     * As this is an override mutation, parent 2 will now contribute to combination as if it had the genetics '3 3 3',
+     * and offspring for that combination will be as if the parents were '1 1 1' and '3 3 3'.
      *
-     * The following parents could trigger it, as they have a 1-2 pair at locus 1:<br/>
-     * <br/>
-     * Parent 1: 1 2 1<br/>
-     * Parent 2: 1 1 1<br/>
-     * <br/>
-     * The following parents could not, as they only have the specified pair at locus 2:<br/>
-     * <br/>
-     * Parent 1: 1 1 1<br/>
-     * Parent 2: 1 1 2<br/>
-     * <br/>
-     *
-     * Suppose the mutation triggered in the first case, the chance was evaluated and a mutation occurred for parent 2. As
-     * this is an override mutation, parent 2 will now contribute to combination as if it had the genetics '3 3 3', and
-     * offspring for that combination will be as if the parents were '1 1 1' and '3 3 3'.
      * @param locus Locus this mutation is triggered by.
      * @param allele0 First allele that must be present at the given locus.
      * @param allele1 Second allele that must be present at the given locus.
@@ -152,8 +139,8 @@ public class Genome {
     }
 
     private final class AllelePair {
-        private int allele0;
-        private int allele1;
+        private final int allele0;
+        private final int allele1;
 
         public AllelePair(int a0, int a1) {
             if (a0 <= a1) {
@@ -167,7 +154,7 @@ public class Genome {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof  AllelePair)) {
+            if (!(o instanceof AllelePair)) {
                 return false;
             }
             AllelePair ap = (AllelePair) o;

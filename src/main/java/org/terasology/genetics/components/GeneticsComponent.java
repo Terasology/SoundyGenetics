@@ -1,22 +1,9 @@
-/*
- * Copyright 2019 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.genetics.components;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.logic.inventory.ItemDifferentiating;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.inventory.logic.ItemDifferentiating;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +19,8 @@ import java.util.Objects;
  * is the the allele that encodes the information that traits are based on for that locus (known as the genotype). The
  * inactive allele is ignored for the purpose of determining genotype, however, it participates in genetic combination.
  */
-public final class GeneticsComponent implements Component, ItemDifferentiating { // TODO: Make dependence on Inventory conditional
+public final class GeneticsComponent implements Component, ItemDifferentiating { // TODO: Make dependence on 
+    // Inventory conditional
     /**
      * Number of loci in this genome.
      */
@@ -59,6 +47,7 @@ public final class GeneticsComponent implements Component, ItemDifferentiating {
 
     /**
      * Constructs a {@code GeneticsComponent} of a given size.
+     *
      * @param size Number of loci in the genome for this component
      */
     public GeneticsComponent(int size) {
@@ -69,8 +58,9 @@ public final class GeneticsComponent implements Component, ItemDifferentiating {
 
     /**
      * Determines if this component is valid.
+     *
      * @return True if and only if there is the same number of active and inactive alleles, and the number of each
-     * matches the number of loci.
+     *         matches the number of loci.
      */
     public boolean isValid() {
         return activeGenes.size() == inactiveGenes.size() && activeGenes.size() == size;
