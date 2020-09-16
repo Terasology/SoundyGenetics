@@ -1,9 +1,9 @@
 // Copyright 2020 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
-package org.terasology.genetics;
+package org.terasology.soundygenetics;
 
 import org.terasology.engine.utilities.random.MersenneRandom;
-import org.terasology.genetics.components.GeneticsComponent;
+import org.terasology.soundygenetics.components.GeneticsComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
