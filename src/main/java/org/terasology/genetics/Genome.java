@@ -15,8 +15,8 @@
  */
 package org.terasology.genetics;
 
+import org.terasology.engine.utilities.random.MersenneRandom;
 import org.terasology.genetics.components.GeneticsComponent;
-import org.terasology.utilities.random.MersenneRandom;
 
 import java.util.ArrayList;
 import java.util.Collections;
