@@ -16,7 +16,7 @@
 package org.terasology.genetics.components;
 
 import org.terasology.engine.entitySystem.Component;
-import org.terasology.logic.inventory.ItemDifferentiating;
+import org.terasology.module.inventory.components.ItemDifferentiating;
 
 import java.util.ArrayList;
 import java.util.List;
