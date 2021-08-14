@@ -93,7 +93,7 @@ public final class GeneticsComponent implements Component<GeneticsComponent>, It
     }
 
     @Override
-    public void copy(GeneticsComponent other) {
+    public void copyFrom(GeneticsComponent other) {
         this.size = other.size;
         this.activeGenes = Lists.newArrayList(other.activeGenes);
         this.inactiveGenes = Lists.newArrayList(other.inactiveGenes);
